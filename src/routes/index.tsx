@@ -1,23 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { DemoPage } from '@/features/prospector/ui';
+export const Route=createFileRoute('/')({head:()=>({meta:[{title:'Hoje | Prospector de I.A'},{name:'description',content:'Sua fila de prospecção responsável para empresas locais.'},{property:'og:title',content:'Hoje | Prospector de I.A'},{property:'og:description',content:'Conversas personalizadas, revisão humana e acompanhamento.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),component:Index});
+function Index(){const navigate=useNavigate();useEffect(()=>{let live=true;supabase.auth.getUser().then(({data})=>{if(live&&data.user)navigate({to:'/hoje'});});return()=>{live=false;};},[navigate]);return <DemoPage/>;}

@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Keep private prospecting pages in the authenticated layout and read workspace data through React Query; this isolates sessions and centralizes refreshes.
+- Use authenticated TanStack server functions for model calls and transactional database functions for send reservations; this protects keys and enforces opt-out and daily limits across tabs.
+- Keep reusable prospecting rules and UI in src/features/prospector; separate route files provide navigation and page metadata.
