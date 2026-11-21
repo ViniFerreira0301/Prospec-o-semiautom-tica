@@ -2,6 +2,7 @@ import type { Tables, TablesInsert } from '@/integrations/supabase/types';
 export type Lead = Tables<'empresas'> & { contato: Tables<'contatos'> };
 export const statuses: Record<string,string> = {a_mandar:'A mandar',enviado:'Enviado',respondeu:'Respondeu',reuniao:'Reunião marcada',fechou:'Fechou',sem_interesse:'Sem interesse'};
 export const optOut = 'Se não fizer sentido, é só me falar que eu não mando mais.';
+export function ensureOptOut(message:string){const trimmed=message.trim();if(trimmed.toLowerCase().includes('se não fizer sentido')||trimmed.split('\n').length>=4)return trimmed;return `${trimmed}\n${optOut}`;}
 export function phone(value: unknown): {value:string;reason?:string} {
  let digits=String(value??'').replace(/\D/g,''); if(digits.startsWith('00')) digits=digits.slice(2); if(digits.length===10||digits.length===11) digits='55'+digits;
  if(!/^55\d{10,11}$/.test(digits)) return {value:digits,reason:'Telefone inválido ou ausente'};

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { phone, prepareImport, followDate, queue, validateMessage, optOut, type Lead } from '@/features/prospector/rules';
+import { phone, prepareImport, followDate, queue, validateMessage, ensureOptOut, optOut, type Lead } from '@/features/prospector/rules';
 import { demoData } from '@/features/prospector/demo';
 
 function demoLead(index: number): Lead {
@@ -31,6 +31,11 @@ describe('Regras de prospecção', () => {
   it('bloqueia primeira mensagem acima de quatro linhas', () => expect(() => validateMessage(`A\nB\nC\nD\n${optOut}`, 'A')).toThrow());
   it('exige saída na primeira mensagem', () => expect(() => validateMessage('Olá, A! Quer ver uma demonstração?', 'A')).toThrow());
   it('não permite link na primeira mensagem', () => expect(() => validateMessage(`A https://site.com\n${optOut}`, 'A')).toThrow());
+  it('completa a instrução de saída sem ultrapassar quatro linhas', () => {
+    const message = ensureOptOut('Olá, A!\nPosso mostrar uma demonstração?');
+    expect(message).toBe(`Olá, A!\nPosso mostrar uma demonstração?\n${optOut}`);
+    expect(() => validateMessage(message, 'A')).not.toThrow();
+  });
   it('sem limite restante ainda permite follow-up vencido', () => {
     const result = queue(demoData.leads, 0);
     expect(result).toHaveLength(2);
